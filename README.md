@@ -1,4 +1,4 @@
-# ASR but make it Fast 🏃
+# Async Chunking ASR
 
 ### How to get started
 
@@ -30,6 +30,5 @@ python3 chunked_asr.py
 
 #### *Disclaimer:*
 
-- Not tested thoroughly for bugs
-- Very rough edges
-- Email garvan@assemblyai.com for any support!
+- This is for demo purposes
+- Please contact sflamini@assemblyai.com for support!
