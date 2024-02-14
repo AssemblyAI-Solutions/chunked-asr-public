@@ -1,2 +1,3 @@
 ./_pycache
 ./myenv
+.DS_Store
