@@ -4,9 +4,9 @@ import os
 r = redis.Redis(host='localhost', port=6379, db=0)
 
 WEBHOOK_URL = r.get('ngrok_url').decode() + '/'
-ASSEMBLYAI_API_TOKEN = "KEY"
+ASSEMBLYAI_API_TOKEN = "ad1ebe356d37483687391e4e7f3edb32"
 
-if ASSEMBLYAI_API_TOKEN == "API_KEY_GOES_HERE":
+if ASSEMBLYAI_API_TOKEN == "KEY":
     print('Please set your API key in transcribe.py')
     exit()
 
@@ -32,23 +32,25 @@ def upload_file(filename):
     # print('Upload URL: {}'.format(url))
     return url
 
-def create_transcript(url, filename):
+def create_transcript(url, file_counter, test_id, vendor):
     # print('Creating transcript for: {}'.format(url))
     # endpoint = "https://api.assemblyai.com/v2/transcript?filename="+filename
     endpoint = "https://api.assemblyai.com/v2/transcript"
 
     json = {
         "audio_url": url,
-        "speaker_labels": True,
-        "webhook_url": WEBHOOK_URL,
+        # "speaker_labels": True,
+        "dual_channel": True,
+        "webhook_url": WEBHOOK_URL + f"?filenumber={file_counter}&test_id={test_id}&vendor={vendor}",
     }
     headers = {
         "authorization": ASSEMBLYAI_API_TOKEN,
     }
     response = requests.post(endpoint, json=json, headers=headers)
-    print("RESPONSE")
-    print(response)
-    r.rpush('job_order', response.json().get('id'))
+    print("RESPONSE", response)
+    id = response.json().get('id')
+    print("JOB ID", id)
+    r.rpush('job_order', id)
     return response.json()
 
 def get_transcript(id):

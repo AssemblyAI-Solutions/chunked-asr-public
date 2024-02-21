@@ -17,3 +17,4 @@ requests==2.31.0
 urllib3==2.0.2
 webrtcvad==2.0.10
 Werkzeug==2.3.4
+supabase==2.3.4

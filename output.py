@@ -7,6 +7,7 @@ def process_jobs():
     first_flag = True
     while True:
         job_id = r.lindex('job_order', 0)  # get the first job id from the list
+        
         if job_id:
             if first_flag:
                 # metrics.measure_first_transcript_latency()
