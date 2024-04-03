@@ -30,7 +30,7 @@ app = Flask(__name__)
 #function to write to postgres
 #will take the data we provide to it and write to a new row in supabase table called chunking_asr
 def write_to_postgres(final_transcript, diarized_text, json_responses, vendor_name, vendor_ids):
-    url: str = "https://api.assemblyai-solutions.com"
+    url: str = "https://my_supabase_key.com"
     key: str = "SUPABASE KEY" #note - this requires a supabase table with the schema you see below in trycatch block
     supabase: Client = create_client(url, key)
     try:
