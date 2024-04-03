@@ -143,8 +143,7 @@ def process_audio_file(url, vad, target_chunk_duration_ms, output_dir, r, test_i
 
 # Example usage:
 urls = [
-    "https://api.assemblyai-solutions.com/storage/v1/object/public/public-benchmarking/callhome/4390%20(1).mp3",
-    "https://api.assemblyai-solutions.com/storage/v1/object/public/public-benchmarking/callhome/4093.mp3?t=2024-02-12T16%3A01%3A36.973Z"
+    "your presigned url here..."
 ]
 
 process_assembly_transcripts(urls)

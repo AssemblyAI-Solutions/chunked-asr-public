@@ -31,11 +31,10 @@ app = Flask(__name__)
 #will take the data we provide to it and write to a new row in supabase table called chunking_asr
 def write_to_postgres(final_transcript, diarized_text, json_responses, vendor_name, vendor_ids):
     url: str = "https://api.assemblyai-solutions.com"
-    key: str = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0dXNpZXlhdHp2b3RvaHp2bGZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjM2MTIzMTQsImV4cCI6MTk3OTE4ODMxNH0.S7lRDEcyBX8q3FGCcMw6FHfyILVZ2ylrBYDaIZyI1WE"
+    key: str = "SUPABASE KEY" #note - this requires a supabase table with the schema you see below in trycatch block
     supabase: Client = create_client(url, key)
     try:
         data, count = supabase.table('chunking_asr').insert({"vendor_name": vendor_name, "vendor_ids": vendor_ids, "transcript_text": final_transcript, "diarized_text": diarized_text, "json_responses": json_responses}).execute()
-        # print(data)
         return data
     except Exception as e:
         print("ERROR with DB write", e)
@@ -50,7 +49,6 @@ def check_completion_and_compile(test_id, job_id):
     print("TOTAL JOBS", total_jobs, "PROCESSED JOBS", processed_jobs)
     keys_pattern = f'transcript:{test_id}:*'
     keys = r.keys(keys_pattern)
-    print("KEY LIST LENGTH", len(keys))
     if total_jobs > 0 and len(keys) == total_jobs:
         # All jobs have been processed, compile and reorder transcripts
         print(f"All {total_jobs} jobs for test_id {test_id} have been processed. Compiling transcripts.")
@@ -82,7 +80,7 @@ times_called = 0
 def webhook_handler():
     global times_called 
     times_called += 1
-    print("THIS HAS BEEN CALLED ", times_called)
+    print("PROCESSING FILE NUMBER ", times_called)
     filecounter = request.args.get('filenumber', type=int)
     test_id = request.args.get('test_id')
     
@@ -105,16 +103,12 @@ def webhook_handler():
         return jsonify({'message': 'Error processing job'}), 400
 
 def compile_and_order_transcripts(test_id):
-    print("CALLING THE WRITE DATA FUNCTION")
     keys_pattern = f'transcript:{test_id}:*'
     keys = r.keys(keys_pattern)
     transcripts = []
     transcript_ids = []
     transcript_jsons = []
     transcript_utterances = []
-    print("KEYS")
-    print(keys)
-    print(len(keys))
     for key in keys:
 
         _, test_id_str, job_id_str = key.decode("utf-8").split(":")
@@ -135,7 +129,6 @@ def compile_and_order_transcripts(test_id):
     
     # Sort transcripts by filecounter
     transcripts.sort(key=lambda x: x[0])
-    print(transcripts)
     final_transcript = ' '.join([text for _, text in transcripts])
     print(final_transcript)
 

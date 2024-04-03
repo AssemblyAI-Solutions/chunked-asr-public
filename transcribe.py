@@ -4,7 +4,7 @@ import os
 r = redis.Redis(host='localhost', port=6379, db=0)
 
 WEBHOOK_URL = r.get('ngrok_url').decode() + '/'
-ASSEMBLYAI_API_TOKEN = "ad1ebe356d37483687391e4e7f3edb32"
+ASSEMBLYAI_API_TOKEN = "KEY"
 
 if ASSEMBLYAI_API_TOKEN == "KEY":
     print('Please set your API key in transcribe.py')
@@ -27,14 +27,10 @@ def upload_file(filename):
     response = requests.post('https://api.assemblyai.com/v2/upload',
                             headers=headers,
                             data=read_file(filename))
-    # print(response.json())
     url = response.json()['upload_url']
-    # print('Upload URL: {}'.format(url))
     return url
 
 def create_transcript(url, file_counter, test_id, vendor):
-    # print('Creating transcript for: {}'.format(url))
-    # endpoint = "https://api.assemblyai.com/v2/transcript?filename="+filename
     endpoint = "https://api.assemblyai.com/v2/transcript"
 
     json = {
@@ -59,6 +55,4 @@ def get_transcript(id):
     headers = {'authorization': ASSEMBLYAI_API_TOKEN}
     response = requests.get(endpoint, headers=headers)
     return response.json()
-    
-
     
